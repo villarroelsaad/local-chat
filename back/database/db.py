@@ -1,0 +1,28 @@
+import os
+
+from dotenv import load_dotenv
+from sqlalchemy import create_engine
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
+
+load_dotenv()
+
+# En producción, esto vendrá del archivo .env
+SQLALCHEMY_DATABASE_URL = os.getenv("DATABASE_URL")
+if SQLALCHEMY_DATABASE_URL is None:
+    raise ValueError("DATABASE_URL environment variable is not set.")
+
+engine = create_engine(SQLALCHEMY_DATABASE_URL)
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
+Base = declarative_base()
+
+# Esta es la función que usaremos con Depends en los endpoints
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    except Exception as e:
+        print(f"Error al obtener la sesión de la base de datos: {e}")
+    finally:
+        db.close()
