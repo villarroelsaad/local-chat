@@ -1,5 +1,5 @@
 export const logOut = async () => {
-  const response = await fetch('http://localhost:8000/chat/logout', {
+  const response = await fetch('http://localhost:8000/logout', {
       method: "GET",
          headers: {
       "Content-Type": "application/json",
@@ -11,6 +11,6 @@ export const logOut = async () => {
   if (!response.ok) {
     throw new Error("No se pudo cerrar sesion");
   }
-
+  alert("Sesión cerrada exitosamente");
   return await response.json();
 };
