@@ -68,7 +68,7 @@ async def login(
 
     return {"message": "Login exitoso", "user": user.username}
 
-@router.post("/logout")
+@router.get("/logout")
 async def logout(response: Response):
     response.delete_cookie("access_token")
     return {"message": "Sesión cerrada"}

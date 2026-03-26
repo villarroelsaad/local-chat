@@ -7,12 +7,12 @@ export const uploadDocument = async (file: File) => {
     method: "POST",
     body: formData,
     credentials: "include",
-    headers: {
-      "Content-Type": "application/json",
-    },
   });
 
   if (!response.ok) {
+   const errorJson = await response.json().catch(() => ({ detail: "No se pudo leer el JSON de error" }));
+    
+    console.error("DETALLE EXACTO DEL 422:", JSON.stringify(errorJson, null, 2));
     throw new Error("Error al subir el archivo");
         }
         alert("Archivo subido correctamente");
