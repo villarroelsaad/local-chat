@@ -23,6 +23,7 @@ class ChatMessage(Base):
     user_id = Column(
         Integer, ForeignKey("users.id")
     )  # Relación con tu tabla de usuarios
+    session_id = Column(String(255), index=True, nullable=False)
     question = Column(String, nullable=False)
     answer = Column(String, nullable=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now())

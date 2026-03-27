@@ -15,6 +15,7 @@ export default function RegisterPage() {
             await register(email, username, password);
         } catch (error) {
             console.error("Error en el registro:", error);
+            alert("Error al registrarse. Por favor, inténtalo de nuevo.");
         } finally {
             setIsLoading(false);
         }

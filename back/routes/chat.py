@@ -21,8 +21,9 @@ async def chat_with_ai(
     current_user: models.User = Depends(auth.get_current_user),
 ):
     user_prompt = data.prompt
+    # Extraemos el ID que generó tu Frontend (Zustand)
+    session_id = data.session_id 
 
-   
     contexto = ""
     user_docs = [doc for doc in FILE_TEXTS if doc["user_id"] == current_user.id]
     
@@ -35,9 +36,10 @@ async def chat_with_ai(
     
     respuesta_ai = await ask_phi(promt, current_user.id)
 
-   
+    
     nuevo_mensaje = models.ChatMessage(
-        user_id=current_user.id, 
+        user_id=current_user.id,
+        session_id=session_id, 
         question=user_prompt, 
         answer=respuesta_ai
     )
@@ -45,7 +47,11 @@ async def chat_with_ai(
     db.add(nuevo_mensaje)
     db.commit()
 
-    return {"reply": respuesta_ai}
+   
+    return {
+        "reply": respuesta_ai,
+        "session_id": session_id
+    }
 
 @router.get("/chat/history", response_model=List[schemas.ChatHistoryResponse])
 def get_history(

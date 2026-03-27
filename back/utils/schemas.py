@@ -20,6 +20,7 @@ class UserLogin(BaseModel):
 
 class ChatRequest(BaseModel):
     prompt: str
+    session_id: str  
 
 
 # Lo que devolvemos al Frontend (¡Nunca devolvemos la contraseña!)

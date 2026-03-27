@@ -1,4 +1,4 @@
-export const sendMessageToAI = async (message: string) => {
+export const sendMessageToAI = async (message: string,session_id: string) => {
   try {
     // 1. Limpiamos la URL (ya no lleva ?prompt=...)
     const response = await fetch(`http://localhost:8000/chat`, {
@@ -7,7 +7,7 @@ export const sendMessageToAI = async (message: string) => {
         "Content-Type": "application/json",
       },
       // 2. Enviamos el mensaje en el body como JSON
-      body: JSON.stringify({ prompt: message }), 
+      body: JSON.stringify({ prompt: message, session_id: session_id }), 
       credentials: "include",
     });
 
