@@ -1,6 +1,5 @@
 services:
   frontend:
-  
     build: ./front
     container_name: nextjs_frontend
     command: sh -c "npm test -- --watchAll=false && npm run dev"
@@ -8,7 +7,7 @@ services:
       - "3000:3000"
     volumes:
       - ./front:/app
-      - /app/node_modules # Evita que los módulos locales pisen a los del contenedor
+      - /app/node_modules # Avoid overwriting modules
     environment:
       - NEXT_PUBLIC_API_URL=http://localhost:8000
     depends_on:
@@ -56,6 +55,7 @@ services:
     command: >
       "sleep 5;
       curl -X POST http://ollama:11434/api/pull -d '{\"name\": \"phi3\"}';"
+     #Add model  curl -X POST http://ollama:11434/api/pull -d '{\"name\": \"Model you want to use\"}';"
 volumes:
   ollama_data:
   postgres_data:

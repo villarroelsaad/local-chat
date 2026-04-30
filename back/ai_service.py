@@ -34,9 +34,16 @@ async def ask_ia(prompt: str, user_id: int, model: str = "phi3") -> str:
             response.raise_for_status()
             
             return response.json().get("response").strip()
-        
         except httpx.ConnectError:
             return "Error: No se pudo conectar con el servicio Ollama. ¿Está el contenedor encendido?"
+        except httpx.HTTPStatusError as e:
+            if e.response.status_code == 404:
+                return (
+                    "Error: modelo no encontrado en Ollama. "
+                    "Asegúrate de que el modelo esté descargado en el contenedor Ollama "
+                    "y usa el nombre exacto (por ejemplo, llama2:7b, mistral, codellama)."
+                )
+            return f"Error inesperado: {e.response.text or str(e)}"
         except Exception as e:
             return f"Error inesperado: {str(e)}"
         # En ai_service.py
