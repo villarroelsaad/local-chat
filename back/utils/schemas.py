@@ -21,6 +21,7 @@ class UserLogin(BaseModel):
 class ChatRequest(BaseModel):
     prompt: str
     session_id: str  
+    model: str = "phi3"  # Default model  
 
 
 # Lo que devolvemos al Frontend (¡Nunca devolvemos la contraseña!)

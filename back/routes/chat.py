@@ -3,7 +3,7 @@ from routes.files import FILE_TEXTS
 import database.models as models
 import utils.auth as auth
 import utils.schemas as schemas
-from ai_service import ask_phi
+from ai_service import ask_ia
 
 # import db
 from database.db import get_db
@@ -34,7 +34,7 @@ async def chat_with_ai(
 
     promt = f"{contexto}\nPregunta del usuario: {user_prompt}"
     
-    respuesta_ai = await ask_phi(promt, current_user.id)
+    respuesta_ai = await ask_ia(promt, current_user.id, data.model)
 
     
     nuevo_mensaje = models.ChatMessage(
@@ -46,6 +46,8 @@ async def chat_with_ai(
 
     db.add(nuevo_mensaje)
     db.commit()
+
+    return {"reply": respuesta_ai}
 
    
     return {

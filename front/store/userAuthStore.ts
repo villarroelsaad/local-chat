@@ -10,19 +10,20 @@ interface AuthState {
   logout: () => void;
 }
 
-// 1. INTERFAZ COMPLETA (Debe coincidir EXACTAMENTE con el store)
+
 interface ChatState {
   messages: { question: string; answer: string }[];
   fullHistory: any[];
-  currentSessionId: string | null; // <--- FALTABA AQUÍ
-  isLoading: boolean;
+  currentSessionId: string | null; 
+  selectedModel: string;
   
   addMessage: (question: string) => Promise<void>;
   loadHistory: () => Promise<void>;
-  loadHistoryById: (sessionId: string) => Promise<void>; // <--- AHORA RECIBE EL ID (string)
+  loadHistoryById: (sessionId: string) => Promise<void>; 
   loadSidebar: () => Promise<void>;
-  createNewChat: () => void; // <--- FALTABA AQUÍ
+  createNewChat: () => void; 
   setMessages: (messages: { question: string; answer: string }[]) => void;
+  setSelectedModel: (model: string) => void;
 }
 
 export const useAuthStore = create<AuthState>()(
@@ -42,8 +43,11 @@ export const useChatStore = create<ChatState>((set, get) => ({
   fullHistory: [],
   currentSessionId: null, 
   isLoading: false,
+  selectedModel: "phi3",
 
   setMessages: (messages) => set({ messages }),
+
+  setSelectedModel: (model) => set({ selectedModel: model }),
 
   createNewChat: () => {
     set({ messages: [], currentSessionId: null });
@@ -64,7 +68,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
     const sessionId = get().currentSessionId || `sess_${Date.now()}`;
 
     try {
-      const data = await sendMessageToAI(question, sessionId);
+      const data = await sendMessageToAI(question, sessionId, get().selectedModel);
       
       set((state) => ({
         messages: [...state.messages, { question, answer: data.reply }],
@@ -82,7 +86,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
   loadHistoryById: async (sessionId: string) => {
     set({ isLoading: true, currentSessionId: sessionId });
     try {
-      // Importante: Si fullHistory está vacío, lo cargamos primero
+  
       if (get().fullHistory.length === 0) {
         await get().loadSidebar();
       }

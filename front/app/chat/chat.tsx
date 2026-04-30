@@ -22,7 +22,9 @@ export const Chat= () => {
   fullHistory, 
   loadHistoryById,
   createNewChat,   
-  currentSessionId  
+  currentSessionId,
+  selectedModel,
+  setSelectedModel
 } = useChatStore();
 
   useEffect(() => {
@@ -88,7 +90,24 @@ return (
   </div>
 
   <div className="flex-1 overflow-y-auto p-2 space-y-1 custom-scrollbar">
-    {/* Botón Nueva Conversación: Ahora usa createNewChat del store */}
+    {/* Model Selector */}
+    <div className="mb-4">
+      <label className="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">
+        Modelo IA
+      </label>
+      <select
+        value={selectedModel}
+        onChange={(e) => setSelectedModel(e.target.value)}
+        className="w-full p-2 rounded-lg bg-gray-800 border border-gray-700 text-white text-sm focus:outline-none focus:border-sky-500"
+      >
+        <option value="phi3">Phi-3</option>
+        <option value="llama2:7b">Llama 2 7B</option>
+        <option value="mistral">Mistral</option>
+        <option value="codellama">Code Llama</option>
+      </select>
+    </div>
+
+    {/* New conversation */}
     <button 
       onClick={() => createNewChat()} 
       className="w-full text-left p-3 rounded-xl bg-gray-800/50 border border-gray-700 text-sm font-medium hover:bg-gray-700 hover:border-sky-500/50 transition-all mb-4 text-sky-400 flex items-center gap-2 group"
@@ -101,7 +120,7 @@ return (
       Recientes
     </div>
     
-    {/* Mapeo del historial AGRUPADO por session_id */}
+    {/* history mapping */}
     {chatSessions.length > 0 ? (
       chatSessions.map((chat: any, index: number) => (
         <div 
@@ -125,12 +144,12 @@ return (
       ))
     ) : (
       <div className="p-4 text-xs text-gray-600 text-center italic">
-        No hay conversaciones previas
+        there is no history yet...
       </div>
     )}
   </div>
 
-  {/* Botón Log Out */}
+  {/*  Log Out */}
   <div className="p-4 border-t border-gray-800 bg-gray-900/50">
     <button 
       onClick={handleLogOut}
@@ -143,7 +162,7 @@ return (
     </button>
   </div>
 </aside>
-    {/* --- CONTENIDO PRINCIPAL --- */}
+    {/* --- Principal content --- */}
     <main className="flex-1 flex flex-col relative min-w-0">
       
       {/* Header */}
@@ -158,13 +177,13 @@ return (
           </svg>
         </button>
         <div className="flex items-center gap-2">
-          <span className="text-sm font-medium text-gray-400">Modelo:</span>
+          <span className="text-sm font-medium text-gray-400">Model:</span>
           <span className="text-sm font-bold text-sky-400">Phi-3 (Ollama)</span>
         </div>
         <div className="w-8"></div>
       </header>
 
-      {/* Área de Mensajes */}
+      {/* Messages */}
       <div className="flex-1 overflow-y-auto p-4 md:p-8 space-y-6 scroll-smooth">
         {messages.length === 0 && !isLoading ? (
           <div className="h-full flex flex-col items-center justify-center opacity-30 text-center">

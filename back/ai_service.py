@@ -5,12 +5,11 @@ from routes.files import FILE_TEXTS
 OLLAMA_URL = "http://ollama:11434/api/generate"
 
 SYSTEM_PROMPT = (
-    "Eres el Orquestador AI. Tu objetivo es ser un asistente técnico eficiente. "
-    "Responde de forma concisa. Si el usuario te pide realizar una tarea, "
-    "analiza los pasos necesarios. Siempre responde en español."
+    "You are the AI Orchestrator. Your goal is to be an efficient technical assistant."
+    "Respond concisely. If the user asks you to perform a task, analyze the necessary steps "
 )
 
-async def ask_phi(prompt: str, user_id: int) -> str:
+async def ask_ia(prompt: str, user_id: int, model: str = "phi3") -> str:
     contexto = get_context_for_user(user_id)
 
     # Le pasamos el texto de los archivos como "Contexto" antes de la pregunta
@@ -19,7 +18,7 @@ async def ask_phi(prompt: str, user_id: int) -> str:
     full_prompt = f"Sistema: {SYSTEM_PROMPT}\nUsuario: {prompt}\nAsistente:"
     
     payload = {
-        "model": "phi3",
+        "model": model,
         "prompt": full_prompt,
         "stream": False,
         "options": {
